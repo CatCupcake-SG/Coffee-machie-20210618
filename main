@@ -1,6 +1,8 @@
 from menu import MENU, resources
 working = True
 profit = 0
+
+
 # TODO 1: add 'milk' to the dict, and make the order consistent
 for i in MENU:
     if "milk" not in MENU[i]["ingredients"]:
