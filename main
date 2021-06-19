@@ -1,0 +1,76 @@
+from menu import MENU, resources
+working = True
+profit = 0
+# TODO 1: add 'milk' to the dict, and make the order consistent
+for i in MENU:
+    if "milk" not in MENU[i]["ingredients"]:
+        MENU[i]["ingredients"]["milk"] = 0  # add milk to the dictionary
+        order_list = list(MENU[i]["ingredients"].items())  # make the order consistent, switch between list &  dict
+        order_list.append(order_list[1])
+        order_list.remove(order_list[1])
+        MENU[i]["ingredients"] = dict(order_list)
+
+
+# TODO 7: Make coffee & Check inventory
+def make_coffee(drink_name, order_ingredient):
+    for m in order_ingredient:
+        resources[m] -= order_ingredient[m]
+    print(f"Here is your {drink_name}. Enjoy")
+
+
+# TODO 4 check if sufficient
+def check(order_ingredient):
+    for n in order_ingredient:
+        if resources[n] < order_ingredient[n]:
+            print(f"Sorry there is not enough {n}.")
+            return False
+    return True
+
+
+# TODO 5: Process coins
+def process_coins():
+    print("Please insert coins.")
+    quarters = int(input("How many quarters?: ")) * 0.25
+    dimes = int(input("How many dimes?: ")) * 0.1
+    nickels = int(input("How many nickels?: ")) * 0.05
+    pennies = int(input("How many pennies?: ")) * 0.01
+    payment = round((quarters + dimes + nickels + pennies), 2)
+    return payment
+
+
+# TODO 6: Check if transaction is successful
+def transaction(paid, price):
+    if paid < price:
+        print(f"Sorry that's not enough money. Money refunded")
+        return False
+    else:
+        global profit
+        profit += drink["cost"]
+        change = round(paid - price,2)
+        print(f"Here is ${change} in change.")
+        return True
+
+
+# TODO 2: Ask users what would they like?
+while working:
+    order = input("What would you like? (expresso/latte/cappucino): ")
+    # TODO 3: print report
+    if order == "report":
+        for key in resources:
+            if key == "coffee":
+                print(f"{key.capitalize()}: {resources[key]}g")
+            else:
+                print(f"{key.capitalize()}: {resources[key]}ml")
+        print(f"Money: ${profit}")
+    elif order == "off":
+        working = False
+        print("You turned off the machine")
+    else:
+        drink = MENU[order]
+        if check:
+            money_received = process_coins()
+            if transaction(money_received, drink['cost']):
+                make_coffee(order, drink['ingredients'])
+
+
+
